@@ -1,22 +1,29 @@
 /* eslint-disable react/prop-types */
+import { useState } from 'react';
 import initialFriends from './data';
 
 export default function App() {
+  const [friends, setFriends] = useState(initialFriends);
+
+  function handleAddFriend(friend) {
+    setFriends((friends) => [...friends, friend]);
+  }
+
   return (
     <div className="mx-auto my-0 max-w-sm p-2">
-      <FreindsList />
-      <AddFreindForm />
+      <FreindsList friends={friends} />
+      <AddFreindForm onAddFriend={handleAddFriend} />
       <Button>بستن</Button>
       <BillingForm />
     </div>
   );
 }
 
-function FreindsList() {
+function FreindsList({ friends }) {
   return (
     <div className="mb-5">
       <ul>
-        {initialFriends.map((friend) => (
+        {friends.map((friend) => (
           <Friend friend={friend} key={friend.id} />
         ))}
       </ul>
@@ -55,14 +62,46 @@ function Button({ children }) {
   );
 }
 
-function AddFreindForm() {
+function AddFreindForm({ onAddFriend }) {
+  const [name, setName] = useState('');
+  const [image, setImage] = useState('https://i.pravatar.cc/48');
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const id = crypto.randomUUID();
+    const friend = {
+      id,
+      name,
+      image: `${image}?u=${id}`,
+      balance: 0,
+    };
+
+    onAddFriend(friend);
+
+    // Reset inputs
+    setName('');
+    setImage('https://i.pravatar.cc/48');
+  }
   return (
-    <form className="my-4 flex flex-col gap-1 rounded-md bg-purple-100 p-3">
+    <form
+      className="my-4 flex flex-col gap-1 rounded-md bg-purple-100 p-3"
+      onSubmit={handleSubmit}
+    >
       <label>👫 اسم دوستت</label>
-      <input className="rounded-md border-2 border-solid pr-2" type="text" />
+      <input
+        className="rounded-md border-2 border-solid pr-2"
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
 
       <label>🖼 آدرس عکس</label>
-      <input className="rounded-md border-2 border-solid pr-2" type="text" />
+      <input
+        className="rounded-md border-2 border-solid pr-2"
+        type="text"
+        value={image}
+        onChange={(e) => setImage(e.target.value)}
+      />
       <Button>اضافه کردن</Button>
     </form>
   );
