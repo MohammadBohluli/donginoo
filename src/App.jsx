@@ -1,19 +1,31 @@
-/* eslint-disable react/prop-types */
 import { useState } from 'react';
+import Button from './components/Button';
 import initialFriends from './data';
 
 export default function App() {
   const [friends, setFriends] = useState(initialFriends);
+  const [displayAddForm, setDisplayAddForm] = useState(false);
 
   function handleAddFriend(friend) {
     setFriends((friends) => [...friends, friend]);
   }
 
+  function handleDisplayAddForm() {
+    setDisplayAddForm(!displayAddForm);
+  }
+
   return (
     <div className="mx-auto my-0 max-w-sm p-2">
       <FreindsList friends={friends} />
-      <AddFreindForm onAddFriend={handleAddFriend} />
-      <Button>بستن</Button>
+      {displayAddForm && (
+        <AddFreindForm
+          onAddFriend={handleAddFriend}
+          onDisplayAddForm={handleDisplayAddForm}
+        />
+      )}
+      <Button onClick={handleDisplayAddForm}>
+        {displayAddForm ? 'بستن' : 'اضافه کردن دوست'}
+      </Button>
       <BillingForm />
     </div>
   );
@@ -54,15 +66,7 @@ function Friend({ friend }) {
   );
 }
 
-function Button({ children }) {
-  return (
-    <button className="self-center rounded-2xl bg-purple-400 px-5 py-1 transition-all hover:bg-purple-500">
-      {children}
-    </button>
-  );
-}
-
-function AddFreindForm({ onAddFriend }) {
+function AddFreindForm({ onAddFriend, onDisplayAddForm }) {
   const [name, setName] = useState('');
   const [image, setImage] = useState('https://i.pravatar.cc/48');
 
@@ -77,6 +81,7 @@ function AddFreindForm({ onAddFriend }) {
     };
 
     onAddFriend(friend);
+    onDisplayAddForm();
 
     // Reset inputs
     setName('');
