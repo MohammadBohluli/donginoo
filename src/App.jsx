@@ -5,6 +5,17 @@ import initialFriends from './data';
 export default function App() {
   const [friends, setFriends] = useState(initialFriends);
   const [displayAddForm, setDisplayAddForm] = useState(false);
+  const [selectFriend, setSelectFriend] = useState(null);
+
+  function handleSelectFriend(friend) {
+    setSelectFriend((currentFriend) =>
+      currentFriend?.id === friend.id ? null : friend,
+    );
+
+    setDisplayAddForm(false);
+
+    console.log(friend);
+  }
 
   function handleAddFriend(friend) {
     setFriends((friends) => [...friends, friend]);
@@ -16,36 +27,56 @@ export default function App() {
 
   return (
     <div className="mx-auto my-0 max-w-sm p-2">
-      <FreindsList friends={friends} />
+      <FreindsList
+        friends={friends}
+        onSelectFriend={handleSelectFriend}
+        selectFriend={selectFriend}
+      />
+
       {displayAddForm && (
         <AddFreindForm
           onAddFriend={handleAddFriend}
           onDisplayAddForm={handleDisplayAddForm}
         />
       )}
+
       <Button onClick={handleDisplayAddForm}>
         {displayAddForm ? 'بستن' : 'اضافه کردن دوست'}
       </Button>
-      <BillingForm />
+
+      {selectFriend && <BillingForm selectFriend={selectFriend} />}
     </div>
   );
 }
 
-function FreindsList({ friends }) {
+function FreindsList({ friends, onSelectFriend, selectFriend }) {
   return (
     <div className="mb-5">
       <ul>
         {friends.map((friend) => (
-          <Friend friend={friend} key={friend.id} />
+          <Friend
+            friend={friend}
+            onSelectFriend={onSelectFriend}
+            selectFriend={selectFriend}
+            key={friend.id}
+          />
         ))}
       </ul>
     </div>
   );
 }
 
-function Friend({ friend }) {
+function Friend({ friend, onSelectFriend, selectFriend }) {
+  const isSelected = selectFriend?.id === friend.id;
   return (
-    <li className="item-center my-1 flex justify-between rounded-md p-3 hover:bg-purple-100">
+    <li
+      className="item-center my-1 flex justify-between rounded-md p-3 hover:bg-purple-100"
+      style={
+        isSelected
+          ? { backgroundColor: '#f3e8ff' }
+          : { backgroundColor: '#faf5ff' }
+      }
+    >
       <div className="flex">
         <img className="rounded-full" src={friend.image} alt="" />
         <div className="pr-2">
@@ -61,7 +92,9 @@ function Friend({ friend }) {
           {friend.balance === 0 && <p className="text-xs">هیچکس بدهکار نیست</p>}
         </div>
       </div>
-      <Button>انتخاب</Button>
+      <Button onClick={() => onSelectFriend(friend)}>
+        {isSelected ? 'بستن' : 'انتخاب'}
+      </Button>
     </li>
   );
 }
@@ -117,17 +150,17 @@ function AddFreindForm({ onAddFriend, onDisplayAddForm }) {
   );
 }
 
-function BillingForm() {
+function BillingForm({ selectFriend }) {
   return (
     <form className="my-4 flex flex-col gap-1 rounded-md bg-purple-100 p-3">
-      <h2>دونگی کردن صورت حساب با فلانی</h2>
+      <h2>دونگی کردن صورت حساب با {selectFriend.name}</h2>
       <label>💰 صورت حساب</label>
       <input className="rounded-md border-2 border-solid pr-2" type="text" />
 
       <label>🤦🏻‍♂️ هزینه شما</label>
       <input className="rounded-md border-2 border-solid pr-2" type="text" />
 
-      <label>👫 هزینه فلانی</label>
+      <label>👫 هزینه {selectFriend.name}</label>
       <input
         className="rounded-md border-2 border-solid pr-2"
         type="text"
@@ -137,7 +170,7 @@ function BillingForm() {
       <label>🤑 کی صورت حساب رو پرداخت کرد ؟</label>
       <select>
         <option value="شما">شما</option>
-        <option value="فلانی">فلانی</option>
+        <option value={selectFriend.name}>{selectFriend.name}</option>
       </select>
 
       <Button>دونگیش کن</Button>
