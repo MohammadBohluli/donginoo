@@ -7,6 +7,7 @@ export default function App() {
       <FreindsList />
       <AddFreindForm />
       <Button>بستن</Button>
+      <BillingForm />
     </div>
   );
 }
@@ -63,6 +64,34 @@ function AddFreindForm() {
       <label>🖼 آدرس عکس</label>
       <input className="rounded-md border-2 border-solid pr-2" type="text" />
       <Button>اضافه کردن</Button>
+    </form>
+  );
+}
+
+function BillingForm() {
+  return (
+    <form className="my-4 flex flex-col gap-1 rounded-md bg-purple-100 p-3">
+      <h2>دونگی کردن صورت حساب با فلانی</h2>
+      <label>💰 صورت حساب</label>
+      <input className="rounded-md border-2 border-solid pr-2" type="text" />
+
+      <label>🤦🏻‍♂️ هزینه شما</label>
+      <input className="rounded-md border-2 border-solid pr-2" type="text" />
+
+      <label>👫 هزینه فلانی</label>
+      <input
+        className="rounded-md border-2 border-solid pr-2"
+        type="text"
+        disabled
+      />
+
+      <label>🤑 کی صورت حساب رو پرداخت کرد ؟</label>
+      <select>
+        <option value="شما">شما</option>
+        <option value="فلانی">فلانی</option>
+      </select>
+
+      <Button>دونگیش کن</Button>
     </form>
   );
 }
