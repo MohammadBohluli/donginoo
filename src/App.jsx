@@ -72,6 +72,10 @@ function AddFreindForm({ onAddFriend, onDisplayAddForm }) {
 
   function handleSubmit(e) {
     e.preventDefault();
+
+    // handle empty input
+    if (!name || !image) return;
+
     const id = crypto.randomUUID();
     const friend = {
       id,
@@ -106,6 +110,7 @@ function AddFreindForm({ onAddFriend, onDisplayAddForm }) {
         type="text"
         value={image}
         onChange={(e) => setImage(e.target.value)}
+        disabled
       />
       <Button>اضافه کردن</Button>
     </form>
