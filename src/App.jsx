@@ -16,8 +16,6 @@ export default function App() {
     );
 
     setDisplayAddForm(false);
-
-    console.log(friend);
   }
 
   function handleAddFriend(friend) {
@@ -26,6 +24,17 @@ export default function App() {
 
   function handleDisplayAddForm() {
     setDisplayAddForm(!displayAddForm);
+  }
+
+  function handleSplitBill(newBalanceValue) {
+    setFriends(
+      friends.map((friend) =>
+        friend.id === selectFriend.id
+          ? { ...friend, balance: friend.balance + newBalanceValue }
+          : friend,
+      ),
+    );
+    setSelectFriend(null);
   }
 
   return (
@@ -47,7 +56,12 @@ export default function App() {
         {displayAddForm ? 'بستن' : 'اضافه کردن دوست'}
       </Button>
 
-      {selectFriend && <BillingForm selectFriend={selectFriend} />}
+      {selectFriend && (
+        <BillingForm
+          selectFriend={selectFriend}
+          onSplitBill={handleSplitBill}
+        />
+      )}
     </div>
   );
 }

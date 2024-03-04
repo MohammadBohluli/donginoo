@@ -34,11 +34,13 @@ function Friend({ friend, onSelectFriend, selectFriend }) {
           <h3 className="text-xl">{friend.name}</h3>
           {friend.balance > 0 && (
             <p className="text-xs text-green-600">
-              {friend.name} به تو بدهکاره
+              {friend.name} {friend.balance} تومن به شما بدهکاره
             </p>
           )}
           {friend.balance < 0 && (
-            <p className="text-xs text-red-600">تو به {friend.name} بدهکاری</p>
+            <p className="text-xs text-red-600">
+              تو به {friend.name} {Math.abs(friend.balance)} تومن بدهکاری
+            </p>
           )}
           {friend.balance === 0 && <p className="text-xs">هیچکس بدهکار نیست</p>}
         </div>
